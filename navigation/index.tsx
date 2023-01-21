@@ -87,9 +87,10 @@ function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="Add"
+        name="AddDevice"
         component={AddDevice}
         options={{
+          title: "Add Device",
           headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
         }}
