@@ -24,17 +24,21 @@ export default function Home({ navigation }: RootTabScreenProps<'Home'>) {
             <ScrollView>
                 
                 {/* FAV COMP */}
-                <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, width: 'auto', height: 'auto', borderRadius: 5 }}>
+                <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, width: 'auto', height: 'auto', borderRadius: 5 }}>
                     <VStack m={4} spacing={6}>
-                    <BarChart
-                        barWidth={22}
-                        noOfSections={3}
-                        barBorderRadius={4}
-                        frontColor="lightgray"
-                        data={barData}
-                        yAxisThickness={0}
-                        xAxisThickness={0}
-                    />
+                        <Box style={{overflow:'visible'}}>
+                            <BarChart
+                                horizontal
+                                barWidth={22}
+                                noOfSections={3}
+                                barBorderRadius={4}
+                                frontColor="lightgray"
+                                data={barData}
+                                yAxisThickness={0}
+                                xAxisThickness={0}
+                            />
+                        </Box>
+
                     </VStack>
                 </Surface>
                 
