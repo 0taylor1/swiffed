@@ -64,7 +64,7 @@ export default function Home({ navigation }: RootTabScreenProps<'Home'>) {
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
                         <HStack fill>
                             <Text variant="h4" style={{marginBottom: 10, fontWeight: "bold"}}>
-                                Strathmore!
+                                DAYS!
                             </Text>
                             <Spacer></Spacer>
                             <FontAwesome name="heart" size={32} color="red"/>
@@ -93,7 +93,7 @@ export default function Home({ navigation }: RootTabScreenProps<'Home'>) {
                 <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
                         <Text variant="h4" style={{marginBottom: 10, fontWeight: "bold"}}>
-                            Strathmore!
+                            Donut vs Hole!
                         </Text>
                         <Divider style={{marginBottom: 10}}></Divider>
                         <Flex shrink={1} m={10} style={{justifyContent: 'center', alignItems: 'center'}}>

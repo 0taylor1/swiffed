@@ -20,7 +20,7 @@ import TabThreeScreen from '../screens/TabTwoScreen'; // TODO
 
 import Home from '../screens/Home';
 import Compete from '../screens/Compete';
-import AddDevice from '../screens/AddDevice';
+import Add from '../screens/Add';
 
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
@@ -87,10 +87,10 @@ function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="AddDevice"
-        component={AddDevice}
+        name="Add"
+        component={Add}
         options={{
-          title: "Add Device",
+          title: "Add",
           headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
         }}
