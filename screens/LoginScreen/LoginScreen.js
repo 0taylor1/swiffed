@@ -21,14 +21,14 @@ export default function LoginScreen({navigation}) {
             const usersRef = firebase.firestore().collection('users')
             usersRef
                 .doc(uid)
-                .once('value')
+                .get()
                 .then(firestoreDocument => {
                     if (!firestoreDocument.exists) {
                         alert("User does not exist anymore.")
                         return;
                     }
                     const user = firestoreDocument.data()
-                    navigation.navigate('Home', {user})
+                    navigation.navigate({user})
                 })
                 .catch(error => {
                     alert(error)
