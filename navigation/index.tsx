@@ -19,6 +19,9 @@ import TabTwoScreen from '../screens/TabTwoScreen';
 import TabThreeScreen from '../screens/TabTwoScreen'; // TODO
 
 import Home from '../screens/Home';
+import Compete from '../screens/Compete';
+import AddDevice from '../screens/AddDevice';
+
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -77,7 +80,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Compete"
-        component={TabTwoScreen}
+        component={Compete}
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="flag-checkered" color={color} />,
@@ -85,7 +88,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="Add"
-        component={TabThreeScreen}
+        component={AddDevice}
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,

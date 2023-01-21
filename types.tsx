@@ -32,6 +32,7 @@ export type RootTabParamList = {
   Compete: undefined;
   CompView: undefined;
   AddComp: undefined;
+  AddDevice: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

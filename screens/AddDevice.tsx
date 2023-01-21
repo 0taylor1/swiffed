@@ -5,7 +5,7 @@ import { RootTabScreenProps } from '../types';
 import { View } from "react-native";
 
 
-export default function AddComp({ navigation }: RootTabScreenProps<'AddComp'>) {
+export default function AddDevice({ navigation }: RootTabScreenProps<'Add'>) {
     return(
         <View></View>
     );
