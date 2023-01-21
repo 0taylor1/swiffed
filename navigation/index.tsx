@@ -17,23 +17,63 @@ import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import TabThreeScreen from '../screens/TabTwoScreen'; // TODO
+import { LoginScreen, HomeScreen, RegistrationScreen } from '../screens';
 
 import Home from '../screens/Home';
 import Compete from '../screens/Compete';
 import AddDevice from '../screens/AddDevice';
 
 
+import { useEffect, useState } from 'react'
+import { firebase } from '../firebase/config'
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import { TabRouter } from 'react-navigation';
+// import SyncStorage from 'sync-storage';
 
-export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+export default function Navigation() {
+  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(null)
+  const colorScheme = useColorScheme();
+  
+  // local storage
+  // SyncStorage.set('foo', 'bar');
+  // const result = SyncStorage.get('foo');
+  // console.log(result); // 'bar'
+
+  useEffect(() => {
+    const usersRef = firebase.firestore().collection('users');
+    firebase.auth().onAuthStateChanged((user: { uid: any; }) => {
+      if (user) {
+        usersRef
+          .doc(user.uid)
+          .get()
+          .then((document: { data: () => any; }) => {
+            const userData = document.data()
+            setLoading(false)
+            setUser(userData)
+          })
+          .catch((error: any) => {
+            setLoading(false)
+          });
+      } else {
+        setLoading(false)
+      }
+    });
+  }, []);
+  
   return (
-    <NavigationContainer
-      independent={true}
-      linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer
+        // independent={true}
+        linking={LinkingConfiguration}
+        theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          
+
+        <RootNavigator {...user}/>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
 
@@ -43,16 +83,26 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-function RootNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
-      </Stack.Group>
-    </Stack.Navigator>
-  );
+function RootNavigator(user) {
+  if (true) {
+    return (
+      <Stack.Navigator>
+        <>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Registration" component={RegistrationScreen} />
+          <Stack.Screen name="Home">
+            {/* (component={BottomTabNavigator} options={{ headerShown: false }} />) */
+              (props) => <BottomTabNavigator {...user} options={{ headerShown: false }}/>
+            }
+          </Stack.Screen> 
+          <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+          <Stack.Group screenOptions={{ presentation: 'modal' }}>
+            <Stack.Screen name="Modal" component={ModalScreen} />
+          </Stack.Group>
+        </>
+      </Stack.Navigator>
+    )
+  } 
 }
 
 /**
@@ -60,9 +110,16 @@ function RootNavigator() {
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
+/*
+  {     component={Home}
+        options={({ navigation }: RootTabScreenProps<'Home'>) => ({
+          headerShown: false,
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />, 
+*/
 
-function BottomTabNavigator() {
+function BottomTabNavigator(user) {
   const colorScheme = useColorScheme();
+  // console.log(user) // user data available
 
   return (
     <BottomTab.Navigator

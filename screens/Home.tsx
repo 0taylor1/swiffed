@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import { StyleSheet, ScrollView } from 'react-native';
 import { RootTabScreenProps } from '../types';
 
@@ -9,6 +9,7 @@ import { Flex, Box, Surface, Spacer, HStack, VStack, Text, Divider } from "@reac
 
 // https://gifted-charts.web.app/barchart
 import { BarChart, PieChart} from "react-native-gifted-charts";
+import { UserInterfaceIdiom } from "expo-constants";
 const barData = [
     {value: 745, label: 'Taylor', frontColor: '#00FF00'},
     {value: 500, label: 'Hannah'},
@@ -25,10 +26,12 @@ const barData2 = [
                 {value: 300, label: 'S'},
 ];
 
-export default function Home({ navigation }: RootTabScreenProps<'Home'>) {
+export default function Home({ route, navigation }) {
+    const { itemId, user } = route.params;
     return (
         <Flex>
             <Box h={35}>{/*Space for top of screen*/}</Box> 
+            <View><Text style={{fontSize:20, fontWeight:'bold'}}>{user.fullName}</Text></View>
             <ScrollView>
                 {/* FAV COMP */}
                 <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
