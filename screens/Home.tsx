@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from "react";
+import React, {useContext} from "react";
 import { StyleSheet, ScrollView } from 'react-native';
 import { RootTabScreenProps } from '../types';
 
@@ -7,6 +7,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { View } from "react-native";
 import { Flex, Box, Surface, Spacer, HStack, VStack, Text, Divider } from "@react-native-material/core";
 
+import {useState, useEffect} from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // https://gifted-charts.web.app/barchart
@@ -34,8 +35,8 @@ export default function Home({ route, navigation }) {
     const { itemId, user } = route.params;
 
     // async func to get localStorage user
-    const [faUser, setAUser] = useState({id:'',fullName:'',email:''});
-    const getData = async () => {
+    const [aUser, setAUser] = useState({id:'',fullName:'',email:''});
+    const getUser = async () => {
         try {
         const jsonValue = await AsyncStorage.getItem('@storage_User')
         let val = jsonValue != null ? JSON.parse(jsonValue) : null;
@@ -49,7 +50,7 @@ export default function Home({ route, navigation }) {
     }
     // get user
     useEffect(() => {
-    getData();
+    getUser();
     }, []);
 
     // alert(faUser.fullName)
