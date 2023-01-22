@@ -108,8 +108,12 @@ export default function Compete({ route, navigation }) {
             storeFav(compId);
             updateState(compId);
         }
+        console.log("Pressed compId " + cprops.compId)
         return(
-            <Pressable onPress={() => alert(cprops.compName)} style={{ marginHorizontal: 15, marginBottom: 15,}}>
+            <Pressable 
+                onPress={() => {
+                navigation.navigate('CompView', {compId:cprops.compId, compName: cprops.compName});
+                }}>
                 <Surface elevation={2} style={{ padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
                     <HStack fill>
@@ -139,3 +143,28 @@ type CompCardProps = {
     team: string;
     userFav: string;
 }
+
+/*
+      <BottomTab.Screen
+        name="TabOne"
+        component={TabOneScreen}
+        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
+          title: 'Tab One',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          headerRight: () => (
+            <Pressable
+              onPress={() => navigation.navigate('Modal')}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })}>
+              <FontAwesome
+                name="info-circle"
+                size={25}
+                color={Colors[colorScheme].text}
+                style={{ marginRight: 15 }}
+              />
+            </Pressable>
+          ),
+        })}
+      />
+*/

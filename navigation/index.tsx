@@ -12,7 +12,7 @@ import { ColorSchemeName, Pressable } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import ModalScreen from '../screens/ModalScreen';
+import Compview from '../screens/CompView';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
@@ -91,7 +91,7 @@ function RootNavigator(user) {
           </Stack.Screen> 
           <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
           <Stack.Group screenOptions={{ presentation: 'modal' }}>
-            <Stack.Screen name="Modal" component={ModalScreen} />
+            <Stack.Screen name="CompView" component={Compview} options={{ title: 'CompView', headerShown: false}}/>
           </Stack.Group>
         </>
       </Stack.Navigator>
