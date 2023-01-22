@@ -77,9 +77,9 @@ export default function Compete({ route, navigation }) {
 
     // get list of compcards
     let compStack: any[] = [];
-    for(let i = listofcomps.length-1; i >= (listofcomps.length - numComps); i--) {
-        listofcomps[i].userFav=aFav;
-        compStack.push(CompCard(listofcomps[i]));
+    for(let i = 0; i<3 && i <listofcomps.length; i++) { // DEMO
+        listofcomps[listofcomps.length-i-1].userFav=aFav;
+        compStack.push(CompCard(listofcomps[listofcomps.length-i-1]));
     }
 
     return(

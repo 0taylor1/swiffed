@@ -8,6 +8,7 @@ import { StyleSheet } from 'react-native';
 import { Flex, Box, Surface, Spacer, Button, IconButton, VStack, HStack, Divider, Text, TextInput, ListItem} from "@react-native-material/core";
 import { FontAwesome } from '@expo/vector-icons';
 import SelectDropdown from 'react-native-select-dropdown'
+import { keyboardProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
 
 type userProps = {id:string,fullName:string,email:string}
 
@@ -191,8 +192,9 @@ export default function Add({ route, navigation }) {
                     <IconButton icon={props => <FontAwesome name="send" size={32} color="#00a652"/>} 
                             onPress={() => {
                                 setDeviceCode('')
+                                Keyboard.dismiss()
                                 Alert.alert("Swiffed!", "Your device has been added :)")
-                            }}/>
+                            }} />
                 </HStack>
             </Box>
             
