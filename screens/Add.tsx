@@ -117,6 +117,7 @@ export default function Add({ route, navigation }) {
                         setTeams([])
                         setPlayers([])
                         setPlayerMap([])
+                        Alert.alert("Swiffin!", "Competition Created")
                     })
                     .catch((error) => {
                         alert(error)
