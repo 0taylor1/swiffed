@@ -37,7 +37,7 @@ export default function Compete({ route, navigation }) {
     }
 
     // query user competitions
-    const [comps, setComps] = useState([])
+    const [comps, setComps] = useState<CompCardProps[]>([])
     const compsRef = firebase.firestore().collection('comps')
     
     const fetchComps = () => {
@@ -56,7 +56,7 @@ export default function Compete({ route, navigation }) {
                             compName: comp.compName,
                             createdAt: comp.createdAt,
                             team: comp.team,
-                            userFav: getFav()? getFav() : comp.compId
+                            userFav: aFav ? aFav : comp.compId
                         }
                         listofcomps.push(compCardProps)
                         console.log("fetched " + comps.length + " competitions")

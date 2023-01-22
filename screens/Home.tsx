@@ -16,10 +16,16 @@ import { BarChart, PieChart} from "react-native-gifted-charts";
 import { UserInterfaceIdiom } from "expo-constants";
 
 
-const barData = [
-    {value: 745, label: 'Taylor', frontColor: '#00FF00'},
-    {value: 500, label: 'Hannah'},
-    {value: 250, label: 'Jacobi'},
+const barPers = [
+    {value: 100, label: 'Taylor', frontColor:'#00A652'},
+    {value: 60, label: 'Hannah', color:'#08B2E3'},
+    {value: 40, label: 'Jacobi', color:'#EE6352'},
+    {value: 25, label: 'Jinny', color:'#484D6D'},
+];
+
+const barTeam = [
+    {value: 51, label: 'Left Room', color:'#00A652', focused: true, },
+    {value: 20, label: 'Cool Room', color:'#08B2E3'},
 ];
 
 const barData2 = [
@@ -66,101 +72,74 @@ export default function Home({ route, navigation }) {
     useEffect(() => {
         getUser();
         getFav();
-        fetchComps();
-        setTeamsFav([]); setTeamsStat([]); fetchTeamStats();
-        setUsersFav([]); setPersStat([]); fetchPersStats();
+        // fetchComps();
+        // fetchTeamStats();
+        // fetchPersStats();
     }, []);
 
     console.log("log user  "+aUser.fullName)
     console.log("fav comp  "+aFav)
 
 
-    // query favorite competitions
-    const [compsFav, setCompsFav] = useState<CompProps[]>([])
-    const [myTeam, setMyTeam] = useState('')
-    const compsRef = firebase.firestore().collection('comps')
-    const fetchComps = () => {
-        console.log("fetch comps")
-        compsRef.where("compId", "==", aFav)            
-            .onSnapshot(
-                snapshot => {
-                    const listofcomps:CompProps[] = []
-                    snapshot.forEach(doc => {
-                        const comp = doc.data()
-                        let compProps:CompProps = {
-                            compId: comp.compId,
-                            compName: comp.compName,
-                            createdAt: comp.createdAt,
-                            team: comp.team,
-                            uId: comp.uid,
-                            username: comp.username,
-                        }
-                        listofcomps.push(compProps)
-                        // save my team
-                        if(comp.username == aUser.fullName) {setMyTeam(comp.team)}
-                    });
-                    setCompsFav(listofcomps)
-                },
-                error => {
-                    console.log(error)
-                }
-            )
-    }
-
-    console.log("my team  " + myTeam)
-
-    // query team stats
-    const [teamsFav,setTeamsFav] = useState<String[]>([])
-    const [teamsStat,setTeamsStat] = useState<Number[]>([])
-    const sessionsRef = firebase.firestore().collection('sessions')
-    const fetchTeamStats = () => {
-        compsFav.forEach(comp => {
-            if(teamsFav.indexOf(comp.team)<0) {teamsFav.push(comp.team); teamsStat.push(0)}
-            sessionsRef.where("username","==",comp.username).where("startTime",">=",comp.createdAt)
-                .onSnapshot(
-                    snapshot => {
-                        snapshot.forEach(doc => {
-                            const sess = doc.data()
-                            teamsStat[teamsFav.indexOf(comp.team)] += sess.distance 
-                            // double check this works
-                        });
-                    },
-                    error => {
-                        console.log(error)
-                    }
-                )
-        })
-    };
-
-    console.log("teamsFav  " + teamsFav)
-    console.log("teamsStat  " + teamsStat)
-
-    // query personal stats
-    const [usersFav,setUsersFav] = useState<String[]>([])
-    const [persStat,setPersStat] = useState<Number[]>([])
-    const fetchPersStats = () => {
-        compsFav.forEach(comp => {
-            if(usersFav.indexOf(comp.username)<0) {usersFav.push(comp.username); persStat.push(0)}
-            sessionsRef.where("username","==",comp.username).where("startTime",">=",comp.createdAt)
-                .onSnapshot(
-                    snapshot => {
-                        snapshot.forEach(doc => {
-                            const sess = doc.data()
-                            persStat[usersFav.indexOf(comp.username)] += sess.distance
-                            // double check this works
-                        });
-                    },
-                    error => {
-                        console.log(error)
-                    }
-                )
-        })
-    };
-
-    console.log("persStat  " + persStat)
-
-    // TEAM VIEW
-
+    const renderDot = color => {
+        return (
+          <View
+            style={{
+              height: 10,
+              width: 10,
+              borderRadius: 5,
+              backgroundColor: color,
+              marginRight: 10,
+            }}
+          />
+        );
+      };
+      
+      const renderLegendComponent = () => {
+        return (
+          <>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginBottom: 10,
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  width: 120,
+                  marginRight: 20,
+                }}>
+                {renderDot('#00A652')}
+                <Text style={{color: 'black'}}>Room Left</Text>
+              </View>
+              <View
+                style={{flexDirection: 'row', alignItems: 'center', width: 120}}>
+                {renderDot('#08B2E3')}
+                <Text style={{color: 'black'}}>Cool Room</Text>
+              </View>
+            </View>
+            {/* <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  width: 120,
+                  marginRight: 20,
+                }}>
+                {renderDot('#08B2E3')}
+                <Text style={{color: 'black'}}>Hannah</Text>
+              </View>
+              <View
+                style={{flexDirection: 'row', alignItems: 'center', width: 120}}>
+                {renderDot('#484D6D')}
+                <Text style={{color: 'black'}}>Jinny</Text>
+              </View>
+            </View> */}
+          </>
+        );
+      };
 
     return (
         <Flex>
@@ -177,10 +156,10 @@ export default function Home({ route, navigation }) {
                     <HStack fill>
                         <VStack fill>
                         <Text variant="h6" style={{marginBottom: 15, fontWeight: "bold"}}>
-                            comp {}
+                            Strathmore Roomies! {}
                         </Text>
                         <Text>
-                            Team {myTeam}
+                            Team Room Left
                         </Text>
                         </VStack>
                         
@@ -198,7 +177,7 @@ export default function Home({ route, navigation }) {
                     
                         <Divider style={{marginBottom: 10}}></Divider>
                         <Flex shrink={1} m={10} style={{justifyContent: 'center', alignItems: 'center'}}>
-                            <BarChart
+                            {/* <BarChart
                                 horizontal
                                 // barWidth={20}
                                 barBorderRadius={5}
@@ -209,20 +188,26 @@ export default function Home({ route, navigation }) {
                                 hideYAxisText
                                 hideRules
                                 disableScroll={true}
-                            />
+                            /> */}
+                                <View style={{padding: 15, alignItems: 'center'}}>
+                                    <PieChart
+                                    data={barTeam}
+                                    donut
+                                    sectionAutoFocus
+                                    radius={90}
+                                    innerRadius={60}
+                                    />
+                                </View>
+                                {renderLegendComponent()}
                         </Flex>
                 </Surface>
 
                 {/* PERSONAL VIEW */}
                 <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
-                        <HStack fill>
-                            <Text variant="h6" style={{marginBottom: 10, fontWeight: "bold"}}>
-                                by person
-                            </Text>
-                            <Spacer></Spacer>
-                            <FontAwesome name="heart" size={32} color="red"/>
-                        </HStack>
+                        <Text variant="h6" style={{marginBottom: 10, fontWeight: "bold"}}>
+                            by person
+                        </Text>
                     
                         <Divider style={{marginBottom: 10}}></Divider>
                         <Flex shrink={1} m={10} style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -230,9 +215,10 @@ export default function Home({ route, navigation }) {
                                 horizontal
                                 // width={barData2.length*90}
                                 // barWidth={20}
+                                maxValue={70}
                                 barBorderRadius={5}
                                 frontColor="lightgray"
-                                data={barData2}
+                                data={barPers}
                                 yAxisThickness={0}
                                 xAxisThickness={0}
                                 hideYAxisText
@@ -242,27 +228,22 @@ export default function Home({ route, navigation }) {
                         </Flex>
                 </Surface>
 
-                {/* FAV COMP */}
                 <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
-                        <Text variant="h5" style={{marginBottom: 10, fontWeight: "bold"}}>
-                            Donut vs Hole!
+                        <Text variant="h6" style={{marginBottom: 10, fontWeight: "bold"}}>
+                            You swiffed <Text variant="h6" style={{marginBottom: 10, fontWeight: "900", color:"#00a652"}}>0.75 miles</Text> this week!
                         </Text>
-                        <Divider style={{marginBottom: 10}}></Divider>
-                        <Flex shrink={1} m={10} style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <PieChart
-                            donut
-                            innerRadius={80}
-                            data={barData}
-                            centerLabelComponent={() => {
-                            return <Text style={{fontSize: 30}}></Text>;
-                            }}
-                        />
-                        </Flex>
+                </Surface>
+
+                <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
+                    width: 'auto', height: 'auto', borderRadius: 5 }}>
+                        <Text variant="h6" style={{marginBottom: 10, fontWeight: "bold"}}>
+                            You swiffed <Text variant="h6" style={{marginBottom: 10, fontWeight: "900", color:"#00a652"}}>1.3 times</Text> more than Jinny this week!
+                        </Text>
                 </Surface>
                 
                 
-                <Box h={40}>{/*Space for bottom of screen*/}</Box> 
+                <Box h={120}>{/*Space for bottom of screen*/}</Box> 
             </ScrollView>
         </Flex>
         
