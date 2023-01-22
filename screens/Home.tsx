@@ -5,7 +5,7 @@ import { RootTabScreenProps } from '../types';
 import { FontAwesome } from '@expo/vector-icons';
 
 import { View } from "react-native";
-import { Flex, Box, Surface, Spacer, HStack, VStack, Text, Divider } from "@react-native-material/core";
+import { Flex, Box, Surface, Spacer, HStack, VStack, Text, Divider, IconButton} from "@react-native-material/core";
 
 import {useState, useEffect} from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -50,14 +50,7 @@ export default function Home({ route, navigation }) {
         alert(e)
         }
     }
-    // get user
-    useEffect(() => {
-        getUser();
-        getFav();
-        fetchComps();
-    }, []);
-
-    // async func to get localStorage user Favorite
+    // async func to get localStorage user Favorite (compId)
     const [aFav, setAFav] = useState('');
     const getFav = async () => {
         try {
@@ -68,8 +61,23 @@ export default function Home({ route, navigation }) {
         // alert(e)
         }
     }
+
+    // get user
+    useEffect(() => {
+        getUser();
+        getFav();
+        fetchComps();
+        setTeamsFav([]); setTeamsStat([]); fetchTeamStats();
+        setUsersFav([]); setPersStat([]); fetchPersStats();
+    }, []);
+
+    console.log("log user  "+aUser.fullName)
+    console.log("fav comp  "+aFav)
+
+
     // query favorite competitions
     const [compsFav, setCompsFav] = useState<CompProps[]>([])
+    const [myTeam, setMyTeam] = useState('')
     const compsRef = firebase.firestore().collection('comps')
     const fetchComps = () => {
         console.log("fetch comps")
@@ -88,6 +96,8 @@ export default function Home({ route, navigation }) {
                             username: comp.username,
                         }
                         listofcomps.push(compProps)
+                        // save my team
+                        if(comp.username == aUser.fullName) {setMyTeam(comp.team)}
                     });
                     setCompsFav(listofcomps)
                 },
@@ -97,53 +107,60 @@ export default function Home({ route, navigation }) {
             )
     }
 
+    console.log("my team  " + myTeam)
+
     // query team stats
     const [teamsFav,setTeamsFav] = useState<String[]>([])
     const [teamsStat,setTeamsStat] = useState<Number[]>([])
     const sessionsRef = firebase.firestore().collection('sessions')
-    compsFav.forEach(comp => {
-        if(teamsFav.indexOf(comp.team)<0) {teamsFav.push(comp.team)}
-        sessionsRef.where("username","==",comp.username).where("startTime",">=",comp.createdAt)
-            .onSnapshot(
-                snapshot => {
-                    snapshot.forEach(doc => {
-                        const sess = doc.data()
-                        teamsStat[teamsFav.indexOf(comp.team)] += sess.distance 
-                        // double check this works
-                    });
-                },
-                error => {
-                    console.log(error)
-                }
-            )
-    })
+    const fetchTeamStats = () => {
+        compsFav.forEach(comp => {
+            if(teamsFav.indexOf(comp.team)<0) {teamsFav.push(comp.team); teamsStat.push(0)}
+            sessionsRef.where("username","==",comp.username).where("startTime",">=",comp.createdAt)
+                .onSnapshot(
+                    snapshot => {
+                        snapshot.forEach(doc => {
+                            const sess = doc.data()
+                            teamsStat[teamsFav.indexOf(comp.team)] += sess.distance 
+                            // double check this works
+                        });
+                    },
+                    error => {
+                        console.log(error)
+                    }
+                )
+        })
+    };
 
-    console.log(teamsStat)
+    console.log("teamsFav  " + teamsFav)
+    console.log("teamsStat  " + teamsStat)
 
     // query personal stats
     const [usersFav,setUsersFav] = useState<String[]>([])
     const [persStat,setPersStat] = useState<Number[]>([])
-    compsFav.forEach(comp => {
-        if(usersFav.indexOf(comp.username)<0) {usersFav.push(comp.username)}
-        sessionsRef.where("username","==",comp.username).where("startTime",">=",comp.createdAt)
-            .onSnapshot(
-                snapshot => {
-                    snapshot.forEach(doc => {
-                        const sess = doc.data()
-                        console.log(sess.distance)
-                        persStat[usersFav.indexOf(comp.username)] += sess.distance 
-                        // double check this works
-                    });
-                },
-                error => {
-                    console.log(error)
-                }
-            )
-    })
+    const fetchPersStats = () => {
+        compsFav.forEach(comp => {
+            if(usersFav.indexOf(comp.username)<0) {usersFav.push(comp.username); persStat.push(0)}
+            sessionsRef.where("username","==",comp.username).where("startTime",">=",comp.createdAt)
+                .onSnapshot(
+                    snapshot => {
+                        snapshot.forEach(doc => {
+                            const sess = doc.data()
+                            persStat[usersFav.indexOf(comp.username)] += sess.distance
+                            // double check this works
+                        });
+                    },
+                    error => {
+                        console.log(error)
+                    }
+                )
+        })
+    };
 
-    console.log(persStat)
+    console.log("persStat  " + persStat)
 
-    // alert(faUser.fullName)
+    // TEAM VIEW
+
 
     return (
         <Flex>
@@ -154,16 +171,30 @@ export default function Home({ route, navigation }) {
             <Divider style={{marginBottom: 15}}></Divider>
 
             <ScrollView>
-                {/* FAV COMP */}
+                {/* FAVORITE */}
+                <Surface elevation={2} style={{ margin:15, padding: 15, 
+                    width: 'auto', borderRadius: 5 }} >
+                    <HStack fill>
+                        <VStack fill>
+                        <Text variant="h6" style={{marginBottom: 15, fontWeight: "bold"}}>
+                            comp {}
+                        </Text>
+                        <Text>
+                            Team {myTeam}
+                        </Text>
+                        </VStack>
+                        
+                        <Spacer></Spacer>
+                        <IconButton icon={props => <FontAwesome name="heart" size={32} color="red"/>} />
+                    </HStack>
+                </Surface>
+
+                {/* TEAM VIEW */}
                 <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
-                        <HStack fill>
-                            <Text variant="h5" style={{marginBottom: 10, fontWeight: "bold"}}>
-                                Strathmore!
-                            </Text>
-                            <Spacer></Spacer>
-                            <FontAwesome name="heart" size={32} color="red"/>
-                        </HStack>
+                        <Text variant="h6" style={{marginBottom: 10, fontWeight: "bold"}}>
+                            by team
+                        </Text>
                     
                         <Divider style={{marginBottom: 10}}></Divider>
                         <Flex shrink={1} m={10} style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -182,12 +213,12 @@ export default function Home({ route, navigation }) {
                         </Flex>
                 </Surface>
 
-                {/* FAV COMP */}
+                {/* PERSONAL VIEW */}
                 <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
                         <HStack fill>
-                            <Text variant="h5" style={{marginBottom: 10, fontWeight: "bold"}}>
-                                DAYS!
+                            <Text variant="h6" style={{marginBottom: 10, fontWeight: "bold"}}>
+                                by person
                             </Text>
                             <Spacer></Spacer>
                             <FontAwesome name="heart" size={32} color="red"/>
