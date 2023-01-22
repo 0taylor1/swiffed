@@ -5,10 +5,9 @@ import { FontAwesome } from '@expo/vector-icons';
 
 import { View } from "react-native";
 import { Flex, Box, Surface, Spacer, HStack, VStack, Text, Divider, Button, IconButton, FAB, Stack, Pressable } from "@react-native-material/core";
-
 import {useState, useEffect} from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { firebase } from '../firebase/config'
 
 const listofcomps:CompCardProps[] =[
     {compId:"aa",compName:"c1",team:"A",userFav:"cc"},
@@ -17,7 +16,10 @@ const listofcomps:CompCardProps[] =[
     {compId:"dd",compName:"CFour",team:"T",userFav:"cc"},
 ];
 
-export default function Compete({ navigation }: RootTabScreenProps<'Compete'>) {
+export default function Compete({ route, navigation }) {
+    const { username, uid } = route.params
+    console.log("i am : " + username)
+
     // async func to get localStorage user Favorite
     const [aFav, setAFav] = useState('');
     const getFav = async () => {
@@ -31,9 +33,22 @@ export default function Compete({ navigation }: RootTabScreenProps<'Compete'>) {
         // alert(e)
         }
     }
+
+    // query user competitions
+    
+    const [comps, setComps] = useState([])
+    const compsRef = firebase.firestore().collection('comps')
+    
+    const fetchComps = () => {
+        console.log("fetch comps")
+        // compsRef
+            // .where("username", "==", )
+    }
+    
     // get fav
     useEffect(() => {
         getFav();
+        fetchComps();
     }, []);
 
     // get list of compcards

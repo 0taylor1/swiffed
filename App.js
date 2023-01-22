@@ -13,7 +13,6 @@ import {
   ModalScreen
 } from './screens'
 import { firebase } from './firebase/config'
-// import SyncStorage from 'sync-storage';
 
 import React, { useEffect, useState } from 'react'
 import {decode, encode} from 'base-64'
@@ -21,10 +20,6 @@ if (!global.btoa) { global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
 const Stack = createStackNavigator();
-// async function componentWillMount() {
-//   const data = await SyncStorage.init();
-//   console.log('AsyncStorage is ready!', data);
-// }
 
 export default function App() {
   const isLoadingComplete = useCachedResources();

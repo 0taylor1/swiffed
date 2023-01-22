@@ -28,9 +28,17 @@ export type RootTabParamList = {
   TabOne: undefined;
   TabTwo: undefined;
 
-  Home: undefined;
-  Compete: undefined;
-  CompView: undefined;
+  Home: {
+    username: string,
+    uid: string
+  }
+  Compete: {
+    username: string,
+    uid: string
+  }
+  CompView: {
+    compId: string
+  }
   Add: {
     username: string,
     uid: string
