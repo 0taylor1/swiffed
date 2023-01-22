@@ -88,9 +88,9 @@ function RootNavigator(user) {
     return (
       <Stack.Navigator>
         <>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Registration" component={RegistrationScreen} />
-          <Stack.Screen name="Home">
+          <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
+          <Stack.Screen name="Registration" component={RegistrationScreen} options={{headerShown: false}}/>
+          <Stack.Screen name="Home" options={{headerShown: false}}>
             {/* (component={BottomTabNavigator} options={{ headerShown: false }} />) */
               (props) => <BottomTabNavigator {...user} options={{ headerShown: false }}/>
             }

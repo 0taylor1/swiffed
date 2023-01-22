@@ -58,13 +58,17 @@ export default function Home({ route, navigation }) {
     return (
         <Flex>
             <Box h={35}>{/*Space for top of screen*/}</Box> 
-            {/* <View><Text style={{fontSize:20, fontWeight:'bold'}}>{user.fullName}</Text></View> */}
+            <Text variant="h5" style={{margin: 15, fontWeight: "bold"}}>
+                Welcome {aUser.fullName} !!
+            </Text>
+            <Divider style={{marginBottom: 15}}></Divider>
+
             <ScrollView>
                 {/* FAV COMP */}
                 <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
                         <HStack fill>
-                            <Text variant="h4" style={{marginBottom: 10, fontWeight: "bold"}}>
+                            <Text variant="h5" style={{marginBottom: 10, fontWeight: "bold"}}>
                                 Strathmore!
                             </Text>
                             <Spacer></Spacer>
@@ -86,14 +90,13 @@ export default function Home({ route, navigation }) {
                                 disableScroll={true}
                             />
                         </Flex>
-                        <Text>end</Text>
                 </Surface>
 
                 {/* FAV COMP */}
                 <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
                         <HStack fill>
-                            <Text variant="h4" style={{marginBottom: 10, fontWeight: "bold"}}>
+                            <Text variant="h5" style={{marginBottom: 10, fontWeight: "bold"}}>
                                 DAYS!
                             </Text>
                             <Spacer></Spacer>
@@ -116,13 +119,12 @@ export default function Home({ route, navigation }) {
                                 disableScroll={true}
                             />
                         </Flex>
-                        <Text>end</Text>
                 </Surface>
 
                 {/* FAV COMP */}
                 <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
-                        <Text variant="h4" style={{marginBottom: 10, fontWeight: "bold"}}>
+                        <Text variant="h5" style={{marginBottom: 10, fontWeight: "bold"}}>
                             Donut vs Hole!
                         </Text>
                         <Divider style={{marginBottom: 10}}></Divider>

@@ -45,7 +45,7 @@ export default function Compete({ navigation }: RootTabScreenProps<'Compete'>) {
 
     return(
         <Flex>
-            <Box h={30}>{/*Space for top of screen*/}</Box> 
+            <Box h={35}>{/*Space for top of screen*/}</Box> 
             <Text variant="h5" style={{margin: 15, fontWeight: "bold"}}>
                 Your Competitions
             </Text>
