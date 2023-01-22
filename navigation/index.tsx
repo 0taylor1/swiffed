@@ -110,12 +110,6 @@ function RootNavigator(user) {
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
-/*
-  {     component={Home}
-        options={({ navigation }: RootTabScreenProps<'Home'>) => ({
-          headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />, 
-*/
 
 function BottomTabNavigator(user) {
   const colorScheme = useColorScheme();
@@ -150,6 +144,10 @@ function BottomTabNavigator(user) {
           title: "Add",
           headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
+        }}
+        initialParams={{
+          username: user.fullName,
+          uid: user.uid
         }}
       />
     </BottomTab.Navigator>

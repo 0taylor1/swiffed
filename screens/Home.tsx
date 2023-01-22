@@ -28,6 +28,7 @@ const barData2 = [
 
 export default function Home({ route, navigation }) {
     const { itemId, user } = route.params;
+    // const {username, uid} = route.params
     return (
         <Flex>
             <Box h={35}>{/*Space for top of screen*/}</Box> 
