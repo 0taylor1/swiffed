@@ -5,9 +5,6 @@ import { RootTabScreenProps } from '../types';
 import { firebase } from '../firebase/config'
 
 import { StyleSheet } from 'react-native';
-
-// import { SelectList } from 'react-native-dropdown-select-list'
-
 import { Flex, Box, Surface, Spacer, Button, IconButton, VStack, HStack, Divider, Text, TextInput, ListItem} from "@react-native-material/core";
 import { FontAwesome } from '@expo/vector-icons';
 import SelectDropdown from 'react-native-select-dropdown'
@@ -19,6 +16,7 @@ export default function Add({ route, navigation }) {
     const usersRef = firebase.firestore().collection('users')
     const compsRef = firebase.firestore().collection('comps')
     const { username, uid } = route.params
+    // console.log("i am :" + username)
 
     // comp name
     const [compName, setCompName] = useState('');
