@@ -50,7 +50,7 @@ export default function Add({ route, navigation }) {
                 .onSnapshot(
                     querySnapshot => {
                         if (!querySnapshot.size) {
-                            alert("User not found.")
+                            alert("user not found.")
                         }
                         querySnapshot.forEach(doc => {
                             console.log(doc.id, " => ", doc.data())

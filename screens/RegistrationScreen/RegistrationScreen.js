@@ -34,6 +34,16 @@ export default function RegistrationScreen({navigation}) {
                     .doc(uid)
                     .set(data)
                     .then(() => {
+                        // store to asyncData
+                        const storeData = async (value) => {
+                            try {
+                                const jsonValue = JSON.stringify(value)
+                                await AsyncStorage.setItem('@storage_User', jsonValue)
+                            } catch (e) {
+                            alert(e)
+                            }
+                        }
+                        storeData(user);
                         navigation.navigate('Home', {user: data})
                     })
                     .catch((error) => {
