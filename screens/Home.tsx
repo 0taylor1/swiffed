@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import { StyleSheet, ScrollView } from 'react-native';
 import { RootTabScreenProps } from '../types';
 
@@ -6,6 +6,8 @@ import { FontAwesome } from '@expo/vector-icons';
 
 import { View } from "react-native";
 import { Flex, Box, Surface, Spacer, HStack, VStack, Text, Divider } from "@react-native-material/core";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // https://gifted-charts.web.app/barchart
 import { BarChart, PieChart} from "react-native-gifted-charts";
@@ -26,12 +28,36 @@ const barData2 = [
                 {value: 300, label: 'S'},
 ];
 
+
+
 export default function Home({ route, navigation }) {
     const { itemId, user } = route.params;
+
+    // async func to get localStorage user
+    const [faUser, setAUser] = useState({id:'',fullName:'',email:''});
+    const getData = async () => {
+        try {
+        const jsonValue = await AsyncStorage.getItem('@storage_User')
+        let val = jsonValue != null ? JSON.parse(jsonValue) : null;
+        if (!val) {
+            throw Error(val)
+        }
+        setAUser(val)
+        } catch(e) {
+        alert(e)
+        }
+    }
+    // get user
+    useEffect(() => {
+    getData();
+    }, []);
+
+    // alert(faUser.fullName)
+
     return (
         <Flex>
             <Box h={35}>{/*Space for top of screen*/}</Box> 
-            <View><Text style={{fontSize:20, fontWeight:'bold'}}>{user.fullName}</Text></View>
+            {/* <View><Text style={{fontSize:20, fontWeight:'bold'}}>{user.fullName}</Text></View> */}
             <ScrollView>
                 {/* FAV COMP */}
                 <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
@@ -56,7 +82,7 @@ export default function Home({ route, navigation }) {
                                 xAxisThickness={0}
                                 hideYAxisText
                                 hideRules
-                                disableScroll={false}
+                                disableScroll={true}
                             />
                         </Flex>
                         <Text>end</Text>
@@ -86,7 +112,7 @@ export default function Home({ route, navigation }) {
                                 xAxisThickness={0}
                                 hideYAxisText
                                 hideRules
-                                disableScroll={false}
+                                disableScroll={true}
                             />
                         </Flex>
                         <Text>end</Text>
