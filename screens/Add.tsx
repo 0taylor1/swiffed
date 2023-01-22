@@ -7,7 +7,7 @@ import { Flex, Box, Surface, Spacer, VStack, Text } from "@react-native-material
 
 
 
-export default function AddComp({ navigation }: RootTabScreenProps<'AddComp'>) {
+export default function Add({ navigation }: RootTabScreenProps<'Add'>) {
     return(
         <Flex>
             <Box h={30}>{/*Space for top of screen*/}</Box> 

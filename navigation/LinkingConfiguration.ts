@@ -25,9 +25,9 @@ const linking: LinkingOptions<RootStackParamList> = {
               Compete: 'Compete',
             },
           },
-          AddDevice: {
+          Add: {
             screens: {
-              AddDevice: 'AddDevice',
+              Add: 'Add',
             },
           },
         },

@@ -21,7 +21,7 @@ import { LoginScreen, HomeScreen, RegistrationScreen } from '../screens';
 
 import Home from '../screens/Home';
 import Compete from '../screens/Compete';
-import AddDevice from '../screens/AddDevice';
+import Add from '../screens/Add';
 
 
 import { useEffect, useState } from 'react'
@@ -144,10 +144,10 @@ function BottomTabNavigator(user) {
         }}
       />
       <BottomTab.Screen
-        name="AddDevice"
-        component={AddDevice}
+        name="Add"
+        component={Add}
         options={{
-          title: "Add Device",
+          title: "Add",
           headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
         }}
