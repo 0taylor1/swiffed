@@ -46,8 +46,8 @@ export default function Compete({ navigation }: RootTabScreenProps<'Compete'>) {
     return(
         <Flex>
             <Box h={35}>{/*Space for top of screen*/}</Box> 
-            <Text variant="h5" style={{margin: 15, fontWeight: "bold"}}>
-                Your Competitions
+            <Text variant="h5" style={{margin: 15, fontWeight: "bold"}} color="#00a652">
+                your competitions
             </Text>
             <Divider style={{marginBottom: 15}}></Divider>
             <ScrollView>
@@ -56,15 +56,6 @@ export default function Compete({ navigation }: RootTabScreenProps<'Compete'>) {
                 
             <Box h={40}>{/*Space for bottom of screen*/}</Box> 
             </ScrollView>
-            <Spacer></Spacer>
-                <Stack fill center>
-                    <FAB
-                    variant="extended"
-                    icon={props => <FontAwesome name="heart" size={32} color="lightgrey"/>}
-                    label="navigate"
-                    color="primary"
-                    />
-                </Stack>
         </Flex>
     );
 

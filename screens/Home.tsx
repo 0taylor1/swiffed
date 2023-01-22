@@ -58,8 +58,8 @@ export default function Home({ route, navigation }) {
     return (
         <Flex>
             <Box h={35}>{/*Space for top of screen*/}</Box> 
-            <Text variant="h5" style={{margin: 15, fontWeight: "bold"}}>
-                Welcome {aUser.fullName} !!
+            <Text variant="h5" style={{margin: 15, fontWeight: "bold"}} color="#00a652">
+                welcome {aUser.fullName} !!
             </Text>
             <Divider style={{marginBottom: 15}}></Divider>
 
