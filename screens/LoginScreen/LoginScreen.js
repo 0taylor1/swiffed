@@ -4,6 +4,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { firebase } from '../../firebase/config'
 import styles from './styles';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 export default function LoginScreen({navigation}) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -28,6 +31,18 @@ export default function LoginScreen({navigation}) {
                         return;
                     }
                     const user = firestoreDocument.data()
+
+                    // store to asyncData
+                    const storeData = async (value) => {
+                        try {
+                            const jsonValue = JSON.stringify(value)
+                            await AsyncStorage.setItem('@storage_User', jsonValue)
+                        } catch (e) {
+                          alert(e)
+                        }
+                      }
+                    storeData(user);
+
                     navigation.navigate("Home", {
                         screen: "Home",
                         params: { itemId: 86, user: user}

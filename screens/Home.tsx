@@ -7,6 +7,9 @@ import { FontAwesome } from '@expo/vector-icons';
 import { View } from "react-native";
 import { Flex, Box, Surface, Spacer, HStack, VStack, Text, Divider } from "@react-native-material/core";
 
+import {useState, useEffect} from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 // https://gifted-charts.web.app/barchart
 import { BarChart, PieChart} from "react-native-gifted-charts";
 import { UserInterfaceIdiom } from "expo-constants";
@@ -26,19 +29,46 @@ const barData2 = [
                 {value: 300, label: 'S'},
 ];
 
+
+
 export default function Home({ route, navigation }) {
     const { itemId, user } = route.params;
-    // const {username, uid} = route.params
+
+    // async func to get localStorage user
+    const [aUser, setAUser] = useState({id:'',fullName:'',email:''});
+    const getUser = async () => {
+        try {
+        const jsonValue = await AsyncStorage.getItem('@storage_User')
+        let val = jsonValue != null ? JSON.parse(jsonValue) : null;
+        if (!val) {
+            throw Error(val)
+        }
+        setAUser(val)
+        } catch(e) {
+        alert(e)
+        }
+    }
+    // get user
+    useEffect(() => {
+    getUser();
+    }, []);
+
+    // alert(faUser.fullName)
+
     return (
         <Flex>
             <Box h={35}>{/*Space for top of screen*/}</Box> 
-            <View><Text style={{fontSize:20, fontWeight:'bold'}}>{user.fullName}</Text></View>
+            <Text variant="h5" style={{margin: 15, fontWeight: "bold"}}>
+                Welcome {aUser.fullName} !!
+            </Text>
+            <Divider style={{marginBottom: 15}}></Divider>
+
             <ScrollView>
                 {/* FAV COMP */}
                 <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
                         <HStack fill>
-                            <Text variant="h4" style={{marginBottom: 10, fontWeight: "bold"}}>
+                            <Text variant="h5" style={{marginBottom: 10, fontWeight: "bold"}}>
                                 Strathmore!
                             </Text>
                             <Spacer></Spacer>
@@ -57,17 +87,16 @@ export default function Home({ route, navigation }) {
                                 xAxisThickness={0}
                                 hideYAxisText
                                 hideRules
-                                disableScroll={false}
+                                disableScroll={true}
                             />
                         </Flex>
-                        <Text>end</Text>
                 </Surface>
 
                 {/* FAV COMP */}
                 <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
                         <HStack fill>
-                            <Text variant="h4" style={{marginBottom: 10, fontWeight: "bold"}}>
+                            <Text variant="h5" style={{marginBottom: 10, fontWeight: "bold"}}>
                                 DAYS!
                             </Text>
                             <Spacer></Spacer>
@@ -87,16 +116,15 @@ export default function Home({ route, navigation }) {
                                 xAxisThickness={0}
                                 hideYAxisText
                                 hideRules
-                                disableScroll={false}
+                                disableScroll={true}
                             />
                         </Flex>
-                        <Text>end</Text>
                 </Surface>
 
                 {/* FAV COMP */}
                 <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
-                        <Text variant="h4" style={{marginBottom: 10, fontWeight: "bold"}}>
+                        <Text variant="h5" style={{marginBottom: 10, fontWeight: "bold"}}>
                             Donut vs Hole!
                         </Text>
                         <Divider style={{marginBottom: 10}}></Divider>
