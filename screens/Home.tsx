@@ -238,7 +238,8 @@ export default function Home({ route, navigation }) {
                 <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
                         <Text variant="h6" style={{marginBottom: 10, fontWeight: "bold"}}>
-                            You swiffed <Text variant="h6" style={{marginBottom: 10, fontWeight: "900", color:"#00a652"}}>1.3 times</Text> more than Jinny this week!
+                            You swiffed <Text variant="h6" style={{marginBottom: 10, fontWeight: "900", color:"#00a652"}}>1.3 times</Text> more than 
+                            <Text variant="h6" style={{marginBottom: 10, fontWeight: "900", color:"#00aeee"}}> Jinny</Text> this week!
                         </Text>
                 </Surface>
                 
