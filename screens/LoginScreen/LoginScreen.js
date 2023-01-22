@@ -49,7 +49,7 @@ export default function LoginScreen({navigation}) {
                 keyboardShouldPersistTaps="always">
                 <Image
                     style={styles.logo}
-                    source={require('../../assets/images/icon.png')}
+                    source={require('../../assets/images/swiffed_square.png')}
                 />
                 <TextInput
                     style={styles.input}
