@@ -9,12 +9,13 @@ import {useState, useEffect} from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { firebase } from '../firebase/config'
 
-const listofcomps:CompCardProps[] =[
-    {compId:"aa",compName:"c1",team:"A",userFav:"cc"},
-    {compId:"bb",compName:"Competition 2",team:"B",userFav:"cc"},
-    {compId:"cc",compName:"Battle Royal",team:"A",userFav:"cc"},
-    {compId:"dd",compName:"CFour",team:"T",userFav:"cc"},
-];
+// const listofcomps:CompCardProps[] =[
+//     {compId:"aa",compName:"c1",team:"A",userFav:"cc"},
+//     {compId:"bb",compName:"Competition 2",team:"B",userFav:"cc"},
+//     {compId:"cc",compName:"Battle Royal",team:"A",userFav:"cc"},
+//     {compId:"dd",compName:"CFour",team:"T",userFav:"cc"},
+// ];
+const listofcomps:CompCardProps[] = []
 
 export default function Compete({ route, navigation }) {
     const { username, uid } = route.params
@@ -35,14 +36,34 @@ export default function Compete({ route, navigation }) {
     }
 
     // query user competitions
-    
     const [comps, setComps] = useState([])
     const compsRef = firebase.firestore().collection('comps')
     
     const fetchComps = () => {
         console.log("fetch comps")
-        // compsRef
-            // .where("username", "==", )
+        compsRef
+            .where("username", "==", username)
+            .onSnapshot(
+                snapshot => {
+                    snapshot.forEach(doc => {
+                        console.log(doc.id, " => ", doc.data())
+                        const comp = doc.data()
+                        const compCardProps:CompCardProps = {
+                            compId: comp.compId,
+                            compName: comp.compName,
+                            createdAt: comp.createdAt,
+                            team: comp.team,
+                            userFav: getFav()? getFav() : comp.compId
+                        }
+                        listofcomps.push(compCardProps)
+                        console.log("fetched " + comps.length + " competitions")
+                    });
+                    setComps(listofcomps)
+                },
+                error => {
+                    console.log(error)
+                }
+            )
     }
     
     // get fav
@@ -114,6 +135,7 @@ export default function Compete({ route, navigation }) {
 type CompCardProps = {
     compId: string;
     compName: string;
+    createdAt: string;
     team: string;
     userFav: string;
 }
