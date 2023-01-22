@@ -112,8 +112,10 @@ export default function Compete({ route, navigation }) {
         return(
             <Pressable 
                 onPress={() => {
-                navigation.navigate('CompView', {compId:cprops.compId, compName: cprops.compName});
-                }}>
+                    navigation.navigate('CompView', {compId:cprops.compId, compName: cprops.compName});
+                }}
+                style={{ marginHorizontal:15, marginBottom:15 }}
+                >
                 <Surface elevation={2} style={{ padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
                     <HStack fill>
