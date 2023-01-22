@@ -16,6 +16,7 @@ import { firebase } from '../firebase/config'
 //     {compId:"dd",compName:"CFour",team:"T",userFav:"cc"},
 // ];
 const listofcomps:CompCardProps[] = []
+var numComps = 0
 
 export default function Compete({ route, navigation }) {
     const { username, uid } = route.params
@@ -41,12 +42,14 @@ export default function Compete({ route, navigation }) {
     
     const fetchComps = () => {
         console.log("fetch comps")
+        numComps = 0
         compsRef
             .where("username", "==", username)
             .onSnapshot(
                 snapshot => {
                     snapshot.forEach(doc => {
                         console.log(doc.id, " => ", doc.data())
+                        numComps = numComps + 1
                         const comp = doc.data()
                         const compCardProps:CompCardProps = {
                             compId: comp.compId,
@@ -74,7 +77,7 @@ export default function Compete({ route, navigation }) {
 
     // get list of compcards
     let compStack: any[] = [];
-    for(let i = 0; i < listofcomps.length; i++) {
+    for(let i = listofcomps.length-1; i >= (listofcomps.length - numComps); i--) {
         listofcomps[i].userFav=aFav;
         compStack.push(CompCard(listofcomps[i]));
     }
