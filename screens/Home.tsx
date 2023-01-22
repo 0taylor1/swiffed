@@ -9,10 +9,13 @@ import { Flex, Box, Surface, Spacer, HStack, VStack, Text, Divider } from "@reac
 
 import {useState, useEffect} from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { firebase } from '../firebase/config'
 
 // https://gifted-charts.web.app/barchart
 import { BarChart, PieChart} from "react-native-gifted-charts";
 import { UserInterfaceIdiom } from "expo-constants";
+
+
 const barData = [
     {value: 745, label: 'Taylor', frontColor: '#00FF00'},
     {value: 500, label: 'Hannah'},
@@ -28,7 +31,6 @@ const barData2 = [
                 {value: 256, label: 'S'},
                 {value: 300, label: 'S'},
 ];
-
 
 
 export default function Home({ route, navigation }) {
@@ -50,8 +52,96 @@ export default function Home({ route, navigation }) {
     }
     // get user
     useEffect(() => {
-    getUser();
+        getUser();
+        getFav();
+        fetchComps();
     }, []);
+
+    // async func to get localStorage user Favorite
+    const [aFav, setAFav] = useState('');
+    const getFav = async () => {
+        try {
+        let val = await AsyncStorage.getItem('@storage_Fav')
+        val = val?val:''
+        setAFav(val)
+        } catch(e) {
+        // alert(e)
+        }
+    }
+    // query favorite competitions
+    const [compsFav, setCompsFav] = useState<CompProps[]>([])
+    const compsRef = firebase.firestore().collection('comps')
+    const fetchComps = () => {
+        console.log("fetch comps")
+        compsRef.where("compId", "==", aFav)            
+            .onSnapshot(
+                snapshot => {
+                    const listofcomps:CompProps[] = []
+                    snapshot.forEach(doc => {
+                        const comp = doc.data()
+                        let compProps:CompProps = {
+                            compId: comp.compId,
+                            compName: comp.compName,
+                            createdAt: comp.createdAt,
+                            team: comp.team,
+                            uId: comp.uid,
+                            username: comp.username,
+                        }
+                        listofcomps.push(compProps)
+                    });
+                    setCompsFav(listofcomps)
+                },
+                error => {
+                    console.log(error)
+                }
+            )
+    }
+
+    // query team stats
+    const [teamsFav,setTeamsFav] = useState<String[]>([])
+    const [teamsStat,setTeamsStat] = useState<Number[]>([])
+    const sessionsRef = firebase.firestore().collection('sessions')
+    compsFav.forEach(comp => {
+        if(teamsFav.indexOf(comp.team)<0) {teamsFav.push(comp.team)}
+        sessionsRef.where("username","==",comp.username).where("startTime",">=",comp.createdAt)
+            .onSnapshot(
+                snapshot => {
+                    snapshot.forEach(doc => {
+                        const sess = doc.data()
+                        teamsStat[teamsFav.indexOf(comp.team)] += sess.distance 
+                        // double check this works
+                    });
+                },
+                error => {
+                    console.log(error)
+                }
+            )
+    })
+
+    console.log(teamsStat)
+
+    // query personal stats
+    const [usersFav,setUsersFav] = useState<String[]>([])
+    const [persStat,setPersStat] = useState<Number[]>([])
+    compsFav.forEach(comp => {
+        if(usersFav.indexOf(comp.username)<0) {usersFav.push(comp.username)}
+        sessionsRef.where("username","==",comp.username).where("startTime",">=",comp.createdAt)
+            .onSnapshot(
+                snapshot => {
+                    snapshot.forEach(doc => {
+                        const sess = doc.data()
+                        console.log(sess.distance)
+                        persStat[usersFav.indexOf(comp.username)] += sess.distance 
+                        // double check this works
+                    });
+                },
+                error => {
+                    console.log(error)
+                }
+            )
+    })
+
+    console.log(persStat)
 
     // alert(faUser.fullName)
 
@@ -147,3 +237,12 @@ export default function Home({ route, navigation }) {
         
     );
   }
+
+  export type CompProps = {
+    compId: string;
+    compName: string;
+    createdAt: string;
+    team: string;
+    uId: string;
+    username;
+}
