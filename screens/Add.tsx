@@ -38,7 +38,7 @@ export default function Add({ route, navigation }) {
                             Keyboard.dismiss()
                             const player = doc.data()
                             player.id = doc.id
-                            if (player.id in players) {
+                            if (players.indexOf(player.fullName) != -1) {
                                 alert("already added")
                             } else {
                                 players.push(player)
@@ -56,21 +56,31 @@ export default function Add({ route, navigation }) {
     const handleAssignTeam = (e) => {
         console.log("change event detecteds")
         console.log("handling " + e.target + e.text)
-        if (e.text && e.text.length > 0) {
+        // TODO
+    }
+
+    const onSubmitButtonPress = () => {
+        if (players.length > 0) {
             const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-            const data = { 
-                createdBy: e.target.name,
-                createdAt: timestamp
-            };
-            compsRef
-                .add(data)
-                .then(_doc => {
-                    Keyboard.dismiss()
-                    console.log("assign team # " + e.text + " to player " + e.target.name)
-                })
-                .catch((error) => {
-                    alert(error)
-                });
+            const compName = Math.random().toString(36).slice(2,8)
+            players.forEach(p => {
+                const data = {
+                    compName: compName,
+                    createdAt: timestamp,
+                    username: p.fullName,
+                    uid: p.id,
+                    team: "TODO"
+                };
+                compsRef
+                    .add(data)
+                    .then(_doc => {
+                        console.log("recorded data")
+                    })
+                    .catch((error) => {
+                        alert(error)
+                    });
+    
+            })
         }
     }
 
@@ -106,17 +116,24 @@ export default function Add({ route, navigation }) {
                 <TouchableOpacity style={styles.button} onPress={onAddButtonPress}>
                     <Text style={styles.buttonText}>Add</Text>
                 </TouchableOpacity>
+                <View style={styles.container}>
+                    <TouchableOpacity style={styles.button} onPress={onSubmitButtonPress}>
+                        <Text style={styles.buttonText}>Submit</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
             { players && (
                 <View style={styles.listContainer}>
                     <FlatList
                         data={players}
                         renderItem={renderPlayer}
-                        keyExtractor={(item) => item.id}
+                        keyExtractor={(item) => item.fullName}
                         removeClippedSubviews={true}
                     />
                 </View>
             )}
+
+            <Box h={40}>{/*Space for bottom of screen*/}</Box> 
         </View>
     )
 }
