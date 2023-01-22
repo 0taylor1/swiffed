@@ -19,12 +19,6 @@ export default function Add({ route, navigation }) {
     const usersRef = firebase.firestore().collection('users')
     const compsRef = firebase.firestore().collection('comps')
     const { username, uid } = route.params
-    // const dropdowns = [
-    //     {key: '1', value: 1},
-    //     {key: '2', value: 2},
-    //     {key: '3', value: 3},
-    //     {key: '4', value: 4}
-    // ]
 
     // comp name
     const [compName, setCompName] = useState('');
@@ -131,24 +125,6 @@ export default function Add({ route, navigation }) {
         }
     }
 
-    const renderPlayer = ({item, index}) => {
-        return (
-            <View style={styles.formContainer}>
-                <Text style={styles.entityText}>
-                    {item.fullName}
-                </Text>
-                <TextInput
-                    name={item.fullName}
-                    onChange = {(e) => handleAssignTeam(e)}
-                    style={styles.input}
-                    placeholder='Enter team number'
-                    placeholderTextColor="#aaaaaa"
-                />
-            </View>
-        )
-    }
-
-
     // create dynamic team list
     let teamStack: any[] = []
     for(let i=0; i <teams.length; i++) {
@@ -224,10 +200,10 @@ export default function Add({ route, navigation }) {
 
                     {/* TEAMS */}
                     <Surface elevation={2} style={{ padding: 15, width: 'auto', height: 'auto', borderRadius: 5 }}>
-                        <TextInput variant='outlined' label='competition name' style={{width: "100%", marginBottom: 15}} color="#00aeee"
+                        <TextInput variant='outlined' label='competition name' style={{width: "100%", marginBottom: 15}} color="#00aeee" autoCapitalize="none" autoCorrect={false}
                                 onChangeText={newText => setCompName(newText)} value={compName} ></TextInput>
                         <HStack>
-                            <TextInput variant='outlined' label='add teams (max 4)' style={{width: "85%"}} color="#00aeee"
+                            <TextInput variant='outlined' label='add teams (max 4)' style={{width: "85%"}} color="#00aeee" autoCapitalize="none" autoCorrect={false}
                                 onChangeText={newText => setTeamInput(newText)} 
                                 value={teamInput}
                                 ></TextInput>
@@ -245,7 +221,7 @@ export default function Add({ route, navigation }) {
                         <HStack>
                             <TextInput variant='outlined' label='add players' style={{width: "85%"}} color="#00aeee"
                             onChangeText={newText => setPlayerInput(newText)} 
-                            value={playerInput}
+                            value={playerInput} autoCapitalize="none" autoCorrect={false}
                             ></TextInput>
                             <Spacer></Spacer>
                             <IconButton icon={props => <FontAwesome name="plus" size={32} color="#00a652"/>} 
