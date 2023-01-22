@@ -32,6 +32,7 @@ import LinkingConfiguration from './LinkingConfiguration';
 import { TabRouter } from 'react-navigation';
 
 // push notifications
+import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -41,19 +42,48 @@ Notifications.setNotificationHandler({
   }),
 });
 
+async function sendPushNotification(expoPushToken) {
+  const message = {
+    to: expoPushToken,
+    sound: 'default',
+    title: 'Original Title',
+    body: 'And here is the body!',
+    data: { someData: 'goes here' },
+  };
+
+  await fetch('https://exp.host/--/api/v2/push/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Accept-encoding': 'gzip, deflate',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(message),
+  });
+}
+
 export default function Navigation() {
   // notifications
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
 
-  const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
   const colorScheme = useColorScheme();
   
   useEffect(() => {
     // notification token
-    registerForPushNotificationsAsync()
-      .then(token => expoPushTokensApi.register(token));
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
 
     const usersRef = firebase.firestore().collection('users');
     firebase.auth().onAuthStateChanged((user: { uid: any; }) => {
@@ -69,6 +99,10 @@ export default function Navigation() {
           .catch((error: any) => {
             setLoading(false)
           });
+          return () => {
+            Notifications.removeNotificationSubscription(notificationListener.current);
+            Notifications.removeNotificationSubscription(responseListener.current);
+          };
       } else {
         setLoading(false)
       }
@@ -77,23 +111,25 @@ export default function Navigation() {
 
   async function registerForPushNotificationsAsync() {
     let token;
-
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-
-    if (existingStatus !== 'granted') {
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
+      }
+      if (finalStatus !== 'granted') {
         alert('Failed to get push token for push notification!');
         return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
     }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
-
     return token;
   }
+  
   
   return (
     <SafeAreaProvider>
