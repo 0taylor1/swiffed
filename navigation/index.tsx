@@ -30,18 +30,12 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import { TabRouter } from 'react-navigation';
-// import SyncStorage from 'sync-storage';
 
 export default function Navigation() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
   const colorScheme = useColorScheme();
   
-  // local storage
-  // SyncStorage.set('foo', 'bar');
-  // const result = SyncStorage.get('foo');
-  // console.log(result); // 'bar'
-
   useEffect(() => {
     const usersRef = firebase.firestore().collection('users');
     firebase.auth().onAuthStateChanged((user: { uid: any; }) => {
@@ -128,6 +122,10 @@ function BottomTabNavigator(user) {
           headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         })}
+        initialParams={{
+          username: user.fullName,
+          uid: user.uid
+        }}
       />
       <BottomTab.Screen
         name="Compete"
@@ -135,6 +133,10 @@ function BottomTabNavigator(user) {
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="flag-checkered" color={color} />,
+        }}
+        initialParams={{
+          username: user.fullName,
+          uid: user.uid
         }}
       />
       <BottomTab.Screen
