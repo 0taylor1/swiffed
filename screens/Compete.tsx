@@ -16,6 +16,7 @@ import { firebase } from '../firebase/config'
 //     {compId:"dd",compName:"CFour",team:"T",userFav:"cc"},
 // ];
 const listofcomps:CompCardProps[] = []
+var numComps = 0
 
 export default function Compete({ route, navigation }) {
     const { username, uid } = route.params
@@ -41,12 +42,14 @@ export default function Compete({ route, navigation }) {
     
     const fetchComps = () => {
         console.log("fetch comps")
+        numComps = 0
         compsRef
             .where("username", "==", username)
             .onSnapshot(
                 snapshot => {
                     snapshot.forEach(doc => {
                         console.log(doc.id, " => ", doc.data())
+                        numComps = numComps + 1
                         const comp = doc.data()
                         const compCardProps:CompCardProps = {
                             compId: comp.compId,
@@ -74,7 +77,7 @@ export default function Compete({ route, navigation }) {
 
     // get list of compcards
     let compStack: any[] = [];
-    for(let i = 0; i < listofcomps.length; i++) {
+    for(let i = listofcomps.length-1; i >= (listofcomps.length - numComps); i--) {
         listofcomps[i].userFav=aFav;
         compStack.push(CompCard(listofcomps[i]));
     }
@@ -108,8 +111,14 @@ export default function Compete({ route, navigation }) {
             storeFav(compId);
             updateState(compId);
         }
+        console.log("Pressed compId " + cprops.compId)
         return(
-            <Pressable onPress={() => alert(cprops.compName)} style={{ marginHorizontal: 15, marginBottom: 15,}}>
+            <Pressable 
+                onPress={() => {
+                    navigation.navigate('CompView', {compId:cprops.compId, compName: cprops.compName});
+                }}
+                style={{ marginHorizontal:15, marginBottom:15 }}
+                >
                 <Surface elevation={2} style={{ padding: 15, 
                     width: 'auto', height: 'auto', borderRadius: 5 }}>
                     <HStack fill>
@@ -139,3 +148,28 @@ type CompCardProps = {
     team: string;
     userFav: string;
 }
+
+/*
+      <BottomTab.Screen
+        name="TabOne"
+        component={TabOneScreen}
+        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
+          title: 'Tab One',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          headerRight: () => (
+            <Pressable
+              onPress={() => navigation.navigate('Modal')}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })}>
+              <FontAwesome
+                name="info-circle"
+                size={25}
+                color={Colors[colorScheme].text}
+                style={{ marginRight: 15 }}
+              />
+            </Pressable>
+          ),
+        })}
+      />
+*/

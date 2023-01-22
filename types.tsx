@@ -37,7 +37,8 @@ export type RootTabParamList = {
     uid: string
   }
   CompView: {
-    compId: string
+    compId: string,
+    compName: string
   }
   Add: {
     username: string,

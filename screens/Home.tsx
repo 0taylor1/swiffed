@@ -34,7 +34,7 @@ const barData2 = [
 
 
 export default function Home({ route, navigation }) {
-    const { itemId, user } = route.params;
+    const { username, uid } = route.params;
 
     // async func to get localStorage user
     const [aUser, setAUser] = useState({id:'',fullName:'',email:''});

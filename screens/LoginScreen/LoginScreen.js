@@ -43,10 +43,7 @@ export default function LoginScreen({navigation}) {
                       }
                     storeData(user);
 
-                    navigation.navigate("Home", {
-                        screen: "Home",
-                        params: { itemId: 86, user: user}
-                    })
+                    navigation.navigate("Home")
                 })
                 .catch(error => {
                     alert(error)
