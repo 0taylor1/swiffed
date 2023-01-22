@@ -118,7 +118,11 @@ export default function Add({ route, navigation }) {
                     .add(data)
                     .then(_doc => {
                         console.log("recorded data")
-                        // TODO clear fields
+                        // clear fields
+                        setCompName('')
+                        setTeams([])
+                        setPlayers([])
+                        setPlayerMap([])
                     })
                     .catch((error) => {
                         alert(error)
