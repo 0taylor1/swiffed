@@ -4,7 +4,7 @@ import { RootTabScreenProps } from '../types';
 import { FontAwesome } from '@expo/vector-icons';
 
 import { View } from "react-native";
-import { Flex, Box, Surface, Spacer, HStack, VStack, Text, Divider, Button, IconButton, FAB, Stack } from "@react-native-material/core";
+import { Flex, Box, Surface, Spacer, HStack, VStack, Text, Divider, Button, IconButton, FAB, Stack, Pressable } from "@react-native-material/core";
 
 import {useState, useEffect} from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -82,23 +82,25 @@ export default function Compete({ navigation }: RootTabScreenProps<'Compete'>) {
             updateState(compId);
         }
         return(
-            <Surface elevation={2} style={{ marginHorizontal: 15, marginBottom: 15, padding: 15, 
-                width: 'auto', height: 'auto', borderRadius: 5 }}>
-                <HStack fill>
-                    <VStack fill>
-                    <Text variant="h6" style={{marginBottom: 15, fontWeight: "bold"}}>
-                        {cprops.compName}
-                    </Text>
-                    <Text>
-                        Team {cprops.team}
-                    </Text>
-                    </VStack>
-                    
-                    <Spacer></Spacer>
-                    <IconButton icon={props => <FontAwesome name="heart" size={32} color={(cprops.userFav===cprops.compId)?"red":"lightgrey"}/>} 
-                        onPress={() => updateFav(cprops.compId, setAFav)}/>
-                </HStack>
-            </Surface>
+            <Pressable onPress={() => alert(cprops.compName)} style={{ marginHorizontal: 15, marginBottom: 15,}}>
+                <Surface elevation={2} style={{ padding: 15, 
+                    width: 'auto', height: 'auto', borderRadius: 5 }}>
+                    <HStack fill>
+                        <VStack fill>
+                        <Text variant="h6" style={{marginBottom: 15, fontWeight: "bold"}}>
+                            {cprops.compName}
+                        </Text>
+                        <Text>
+                            Team {cprops.team}
+                        </Text>
+                        </VStack>
+                        
+                        <Spacer></Spacer>
+                        <IconButton icon={props => <FontAwesome name="heart" size={32} color={(cprops.userFav===cprops.compId)?"red":"lightgrey"}/>} 
+                            onPress={() => updateFav(cprops.compId, setAFav)}/>
+                    </HStack>
+                </Surface>
+            </Pressable>
         );
     }
 }
