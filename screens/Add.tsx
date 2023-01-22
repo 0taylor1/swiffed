@@ -95,7 +95,7 @@ export default function Add({ route, navigation }) {
     }
 
     const onSubmitComp = () => {
-        if (players.length > 0) {
+        if (players.length > 0 && compName && (players.length == playerMap.length)) {
             let timestamp = firebase.firestore.FieldValue.serverTimestamp();
             // const compName = Math.random().toString(36).slice(2,8)
             const ts = firebase.firestore.Timestamp.now()
@@ -122,6 +122,9 @@ export default function Add({ route, navigation }) {
                         alert(error)
                     });
             })
+        }
+        else {
+            alert("not all competition fields are satisfied. each player must be in a team.")
         }
     }
 
@@ -234,56 +237,13 @@ export default function Add({ route, navigation }) {
                                     onPress={() => onSubmitComp()}/>
                         </HStack>
                     </Surface>
-                    
-
 
                 </Box>
-            
-                
+
             <Box h={40}>{/*Space for bottom of screen*/}</Box> 
             </ScrollView>
         </Flex>
 
-
-
-
-
-
-
-        
-        // <View style={styles.container}>
-        //     <View style={styles.formContainer}>
-        //         <TextInput
-        //             style={styles.input}
-        //             placeholder='Add new entity'
-        //             placeholderTextColor="#aaaaaa"
-        //             onChangeText={(text) => setInputText(text)}
-        //             value={inputText}
-        //             underlineColorAndroid="transparent"
-        //             autoCapitalize="none"
-        //         />
-        //         <TouchableOpacity style={styles.button} onPress={onAddButtonPress}>
-        //             <Text style={styles.buttonText}>Add</Text>
-        //         </TouchableOpacity>
-        //         <View style={styles.container}>
-        //             <TouchableOpacity style={styles.button} onPress={onSubmitButtonPress}>
-        //                 <Text style={styles.buttonText}>Submit</Text>
-        //             </TouchableOpacity>
-        //         </View>
-        //     </View>
-        //     { players && (
-        //         <View style={styles.listContainer}>
-        //             <FlatList
-        //                 data={players}
-        //                 renderItem={renderPlayer}
-        //                 keyExtractor={(item) => item.fullName}
-        //                 removeClippedSubviews={true}
-        //             />
-        //         </View>
-        //     )}
-
-        //     <Box h={40}>{/*Space for bottom of screen*/}</Box> 
-        // </View>
     )
 }
 
