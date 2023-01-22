@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles'
-import { FlatList, Keyboard, TouchableOpacity, View, ScrollView } from 'react-native'
+import { FlatList, Keyboard, TouchableOpacity, View, ScrollView, Alert } from 'react-native'
 import { RootTabScreenProps } from '../types';
 import { firebase } from '../firebase/config'
 
@@ -18,6 +18,8 @@ export default function Add({ route, navigation }) {
     const { username, uid } = route.params
     // console.log("i am :" + username)
 
+    // device code
+    const [deviceCode, setDeviceCode] = useState(''); 
     // comp name
     const [compName, setCompName] = useState('');
     // teams
@@ -115,6 +117,7 @@ export default function Add({ route, navigation }) {
                         setTeams([])
                         setPlayers([])
                         setPlayerMap([])
+                        Alert.alert("Swiffin!", "Competition Created")
                     })
                     .catch((error) => {
                         alert(error)
@@ -183,10 +186,13 @@ export default function Add({ route, navigation }) {
                     add swiffed device
                 </Text>
                 <HStack>
-                    <TextInput variant='outlined' label='TBD' style={{width: "85%"}} color="#00aeee"></TextInput>
+                    <TextInput variant='outlined' label='device code' style={{width: "85%"}} color="#00aeee" autoCapitalize='none' autoComplete='off' autoCorrect={false}></TextInput>
                     <Spacer></Spacer>
                     <IconButton icon={props => <FontAwesome name="send" size={32} color="#00a652"/>} 
-                            onPress={() => null}/>
+                            onPress={() => {
+                                setDeviceCode('')
+                                Alert.alert("Swiffed!", "Your device has been added :)")
+                            }}/>
                 </HStack>
             </Box>
             

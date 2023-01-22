@@ -24,19 +24,37 @@ import Compete from '../screens/Compete';
 import Add from '../screens/Add';
 
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { firebase } from '../firebase/config'
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import { TabRouter } from 'react-navigation';
 
+// push notifications
+import * as Notifications from 'expo-notifications';
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true
+  }),
+});
+
 export default function Navigation() {
+  // notifications
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
   const colorScheme = useColorScheme();
   
   useEffect(() => {
+    // notification token
+    registerForPushNotificationsAsync()
+      .then(token => expoPushTokensApi.register(token));
+
     const usersRef = firebase.firestore().collection('users');
     firebase.auth().onAuthStateChanged((user: { uid: any; }) => {
       if (user) {
@@ -56,6 +74,26 @@ export default function Navigation() {
       }
     });
   }, []);
+
+  async function registerForPushNotificationsAsync() {
+    let token;
+
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+
+    if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+
+    return token;
+  }
   
   return (
     <SafeAreaProvider>
